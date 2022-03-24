@@ -1,24 +1,26 @@
 import React, { useCallback, useMemo } from 'react';
+import moment from 'moment';
 import useBombStats from '../../../hooks/useBombStats';
-import useLpStats from '../../../hooks/useLpStats';
-import useLpStatsBTC from '../../../hooks/useLpStatsBTC';
 import useBondStats from '../../../hooks/useBondStats';
 import usebShareStats from '../../../hooks/usebShareStats';
-import useBombFinance from '../../../hooks/useBombFinance';
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box, Typography } from '@material-ui/core';
 import { roundAndFormatNumber } from '../../../0x';
 import MetamaskFox from '../../../assets/img/metamask-fox.svg';
 import TokenSymbol from '../../../components/TokenSymbol';
-import { Divider } from '@material-ui/core';
+import useCurrentEpoch from '../../../hooks/useCurrentEpoch';
+import useCashPriceInEstimatedTWAP from '../../../hooks/useCashPriceInEstimatedTWAP';
+import useTreasuryAllocationTimes from '../../../hooks/useTreasuryAllocationTimes';
+import ProgressCountdown from '../../Boardroom/components/ProgressCountdown';
+import useTotalValueLocked from '../../../hooks/useTotalValueLocked';
 const FinanceSummary: React.FC = () => {
-  const bombFtmLpStats = useLpStatsBTC('BOMB-BTCB-LP');
-  const bShareFtmLpStats = useLpStats('BSHARE-BNB-LP');
   const bombStats = useBombStats();
   const bShareStats = usebShareStats();
   const tBondStats = useBondStats();
-  const bombFinance = useBombFinance();
-  const bombLPStats = useMemo(() => (bombFtmLpStats ? bombFtmLpStats : null), [bombFtmLpStats]);
-  const bshareLPStats = useMemo(() => (bShareFtmLpStats ? bShareFtmLpStats : null), [bShareFtmLpStats]);
+  const currentEpoch = useCurrentEpoch();
+  const { to } = useTreasuryAllocationTimes();
+  const cashStat = useCashPriceInEstimatedTWAP();
+  const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : null), [cashStat]);
+  const TVL = Number(useTotalValueLocked()).valueOf();
   const bombPriceInDollars = useMemo(
     () => (bombStats ? Number(bombStats.priceInDollars).toFixed(2) : null),
     [bombStats],
@@ -56,9 +58,9 @@ const FinanceSummary: React.FC = () => {
     <div style={{ color: 'white' }}>
       <h2>FINANCE SUMMARY</h2>
       <hr></hr>
-      <Grid container spacing={3} justifyContent="center"
-        alignItems="center" style={{ color: 'white', fontSize: '14px', textAlign:'center' }}>
-        <Grid item xs={6}>
+      <Grid container justifyContent="center"
+        alignItems="center" style={{ color: 'white', fontSize: '14px', textAlign: 'center' }}>
+        <Grid item xs={4}>
           <Grid container xs={12} justifyContent="center"
             alignItems="center">
             <Grid item xs={3}></Grid>
@@ -86,13 +88,13 @@ const FinanceSummary: React.FC = () => {
             </Grid>
             <Grid item xs={2} justifyContent="center"
               alignItems="center">
-              {roundAndFormatNumber(parseInt(bombCirculatingSupply), 2)}
+              {roundAndFormatNumber(parseFloat(bombCirculatingSupply), 2)}
             </Grid>
             <Grid item xs={2}>
-              {roundAndFormatNumber(parseInt(bombTotalSupply), 2)}
+              {roundAndFormatNumber(parseFloat(bombTotalSupply), 2)}
             </Grid>
             <Grid item xs={3}>
-              <span style={{ display: 'block', textAlign: 'center' }}>${bombPriceInDollars ? roundAndFormatNumber(parseInt(bombPriceInDollars), 5) : '-.--'}</span>
+              <span style={{ display: 'block', textAlign: 'center' }}>${bombPriceInDollars ? roundAndFormatNumber(parseFloat(bombPriceInDollars), 5) : '-.--'}</span>
               <span>{bombPriceInBNB ? bombPriceInBNB : '-.----'} BTC</span>
             </Grid>
             <Grid item xs={2}>
@@ -112,13 +114,13 @@ const FinanceSummary: React.FC = () => {
             </Grid>
             <Grid item xs={2} justifyContent="center"
               alignItems="center">
-              {roundAndFormatNumber(parseInt(bShareCirculatingSupply), 2)}
+              {roundAndFormatNumber(parseFloat(bShareCirculatingSupply), 2)}
             </Grid>
             <Grid item xs={2}>
-              {roundAndFormatNumber(parseInt(bShareTotalSupply), 2)}
+              {roundAndFormatNumber(parseFloat(bShareTotalSupply), 2)}
             </Grid>
             <Grid item xs={3}>
-              <span style={{ display: 'block', textAlign: 'center' }}>${bSharePriceInDollars ? roundAndFormatNumber(parseInt(bSharePriceInDollars), 5) : '-.--'}</span>
+              <span style={{ display: 'block', textAlign: 'center' }}>${bSharePriceInDollars ? roundAndFormatNumber(parseFloat(bSharePriceInDollars), 5) : '-.--'}</span>
               <span>{bSharePriceInBNB ? bSharePriceInBNB : '-.----'} BTC</span>
             </Grid>
             <Grid item xs={2}>
@@ -139,13 +141,13 @@ const FinanceSummary: React.FC = () => {
             </Grid>
             <Grid item xs={2} justifyContent="center"
               alignItems="center">
-              {roundAndFormatNumber(parseInt(tBondCirculatingSupply), 2)}
+              {roundAndFormatNumber(parseFloat(tBondCirculatingSupply), 2)}
             </Grid>
             <Grid item xs={2}>
-              {roundAndFormatNumber(parseInt(tBondTotalSupply), 2)}
+              {roundAndFormatNumber(parseFloat(tBondTotalSupply), 2)}
             </Grid>
             <Grid item xs={3}>
-              <span style={{ display: 'block', textAlign: 'center' }}>${tBondPriceInDollars ? roundAndFormatNumber(parseInt(tBondPriceInDollars), 5) : '-.--'}</span>
+              <span style={{ display: 'block', textAlign: 'center' }}>${tBondPriceInDollars ? roundAndFormatNumber(parseFloat(tBondPriceInDollars), 5) : '-.--'}</span>
               <span>{tBondPriceInBNB ? tBondPriceInBNB : '-.----'} BTC</span>
             </Grid>
             <Grid item xs={2}>
@@ -154,10 +156,24 @@ const FinanceSummary: React.FC = () => {
             <hr style={{ width: '80%', borderTop: '0.01px' }} />
           </Grid>
         </Grid>
-        <Grid item xs={3}>
-          COL-2
+        <Grid item xs={4}>
+          <div>
+          <Typography style={{ textTransform: 'uppercase', color: 'white' }}>Current Epoch</Typography>
+            <Typography>{Number(currentEpoch)}</Typography>
+            <hr />
+          </div>
+          <div>
+            <Typography style={{ textTransform: 'uppercase', color: 'white' }}>Next Epoch</Typography>
+            <ProgressCountdown base={moment().toDate()} hideBar={true} deadline={to} description="Next Epoch" />
+            <hr />
+          </div>
+          <div>
+            <p>Live TWAP {scalingFactor}</p>
+            <p>TVL ${roundAndFormatNumber(TVL,2)}</p>
+            <p>Last Epoch TWAP ??? </p>
+          </div>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           COL-3
         </Grid>
       </Grid>

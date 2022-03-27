@@ -6,6 +6,7 @@ import {useWallet} from 'use-wallet';
 import UnlockWallet from '../../components/UnlockWallet';
 import { Grid, Box } from '@material-ui/core';
 import FinanceSummary from './Components/FinanceSummary'
+import Boardroom from './Components/Boardroom'
 import HomeImage from '../../assets/img/background.jpg';
 import styled from 'styled-components';
 const BackgroundImage = createGlobalStyle`
@@ -29,7 +30,7 @@ const Dashboard:React.FC = () => {
                         </Grid>
                         <StyledDashboard>
                             <StyledCardWrapper style={{ margin: '18px', display: 'flex', border: "1px solid grey"}}>
-                                <h1>Component 2</h1>
+                              <Boardroom/>
                             </StyledCardWrapper>
                             <StyledCardWrapper style={{ margin: '18px', display: 'flex', border: "1px solid grey"}}>
                                 <h1>Component 3</h1>
@@ -41,7 +42,6 @@ const Dashboard:React.FC = () => {
                         <Grid item xs={12} sm={12} justify="center" style={{ margin: '18px', display: 'flex', border: "1px solid grey"}}>
                             <h1>Component 5</h1>
                         </Grid>
-
                     </>
                     ) : (
           <UnlockWallet />

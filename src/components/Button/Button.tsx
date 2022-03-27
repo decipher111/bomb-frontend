@@ -12,12 +12,14 @@ interface ButtonProps {
   text?: string;
   to?: string;
   variant?: 'default' | 'secondary' | 'tertiary';
+  width?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({children, disabled, href, onClick, size, text, to, variant}) => {
+const Button: React.FC<ButtonProps> = ({children, disabled, href, onClick, size, text, to, variant, width}) => {
   const {color, spacing} = useContext(ThemeContext);
 
   let buttonColor: string;
+  let buttonWidth:number = Number(width);
   switch (variant) {
     case 'secondary':
       buttonColor = color.teal[200];
@@ -33,7 +35,7 @@ const Button: React.FC<ButtonProps> = ({children, disabled, href, onClick, size,
   let fontSize: number;
   switch (size) {
     case 'sm':
-      buttonPadding = spacing[3];
+      buttonPadding = spacing[4];
       buttonSize = 36;
       fontSize = 14;
       break;
@@ -72,6 +74,7 @@ const Button: React.FC<ButtonProps> = ({children, disabled, href, onClick, size,
       onClick={onClick}
       padding={buttonPadding}
       size={buttonSize}
+      width={buttonWidth}
     >
       {children}
       {ButtonChild}
@@ -86,6 +89,7 @@ interface StyledButtonProps {
   fontSize: number;
   padding: number;
   size: number;
+  width: number;
 }
 
 const StyledButton = styled.button<StyledButtonProps>`
@@ -105,7 +109,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   padding-left: ${(props) => props.padding}px;
   padding-right: ${(props) => props.padding}px;
   pointer-events: ${(props) => (!props.disabled ? undefined : 'none')};
-  width: 100%;
+  width: ${(props) => props.width}%;
   &:hover {
     background-color: ${(props) => props.color};
     color: ${(props) => props.theme.color.grey[900]};

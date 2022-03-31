@@ -7,17 +7,29 @@ import { Grid, Box, Typography } from '@material-ui/core';
 import { roundAndFormatNumber } from '../../../0x';
 import MetamaskFox from '../../../assets/img/metamask-fox.svg';
 import TokenSymbol from '../../../components/TokenSymbol';
+import { getDisplayBalance } from '../../../utils/formatBalance';
 import useCurrentEpoch from '../../../hooks/useCurrentEpoch';
 import useCashPriceInEstimatedTWAP from '../../../hooks/useCashPriceInEstimatedTWAP';
 import useTreasuryAllocationTimes from '../../../hooks/useTreasuryAllocationTimes';
 import ProgressCountdown from '../../Boardroom/components/ProgressCountdown';
 import useTotalValueLocked from '../../../hooks/useTotalValueLocked';
+import useStakedBalance from '../../../hooks/useStakedBalance';
+import useBanks from '../../../hooks/useBanks';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+
 const FinanceSummary: React.FC = () => {
   const bombStats = useBombStats();
   const bShareStats = usebShareStats();
   const tBondStats = useBondStats();
   const currentEpoch = useCurrentEpoch();
   const { to } = useTreasuryAllocationTimes();
+  const [banks] = useBanks();
+  let balanceObj = new Map<string, Number>();
+  // const balance = useStakedBalance(banks[0].name, banks[0].poolId);
+  // balanceObj.set(banks[0].name, Number(getDisplayBalance(balance)));
   const cashStat = useCashPriceInEstimatedTWAP();
   const scalingFactor = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : null), [cashStat]);
   const TVL = Number(useTotalValueLocked()).valueOf();
@@ -53,7 +65,41 @@ const FinanceSummary: React.FC = () => {
     [tBondStats],
   );
   const tBondTotalSupply = useMemo(() => (tBondStats ? String(tBondStats.totalSupply) : null), [tBondStats]);
-
+  const chartData = {
+    datasets: [
+      {
+        data: [12, 19, 3, 5, 2, 3],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+  const chartOptions = {
+    cutoutPercentage: 20,
+    layout: { padding: 10 },
+    legend: {
+      display: false
+    },
+    responsive: true,
+    tooltips: {
+      borderWidth: 1
+    }
+  };
   return (
     <div style={{ color: 'white' }}>
       <h2>FINANCE SUMMARY</h2>
@@ -174,7 +220,14 @@ const FinanceSummary: React.FC = () => {
           </div>
         </Grid>
         <Grid item xs={4}>
-          COL-3
+          <div style={{ width : '50%', margin: '0 auto'}} >
+            <Doughnut data={chartData} options={chartOptions}/>
+          </div>
+          <div>
+            <TokenSymbol symbol="BSHARE" size={24} />
+            BSHARE : 
+            {/* {balanceObj.get(banks[0].name)} */}
+          </div>
         </Grid>
       </Grid>
     </div>

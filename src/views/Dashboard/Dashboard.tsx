@@ -7,6 +7,7 @@ import UnlockWallet from '../../components/UnlockWallet';
 import { Grid, Box } from '@material-ui/core';
 import FinanceSummary from './Components/FinanceSummary'
 import Boardroom from './Components/Boardroom'
+import BombFarms from './Components/BombFarms'
 import HomeImage from '../../assets/img/background.jpg';
 import styled from 'styled-components';
 const BackgroundImage = createGlobalStyle`
@@ -29,19 +30,20 @@ const Dashboard:React.FC = () => {
                         <FinanceSummary/>
                         </Grid>
                         <StyledDashboard>
-                            <StyledCardWrapper style={{ margin: '18px', display: 'flex', border: "1px solid grey"}}>
+                            <StyledCardWrapper style={{ margin: '18px 10px 0px 0px', display: 'flex', border: "1px solid grey"}}>
                               <Boardroom/>
                             </StyledCardWrapper>
-                            <StyledCardWrapper style={{ margin: '18px', display: 'flex', border: "1px solid grey"}}>
+                            <StyledCardWrapper style={{ margin: '18px 0px 0px 10px', display: 'flex', border: "1px solid grey"}}>
                                 <h1>Component 3</h1>
                             </StyledCardWrapper>
                         </StyledDashboard>
-                        <Grid item xs={12} sm={12} justify="center" style={{ margin: '18px', display: 'flex', border: "1px solid grey"}}>
-                            <h1>Component 4</h1>
+                        <Grid item xs={12} sm={12} justify="center" style={{ marginTop: '18px', border: "1px solid grey"}}>
+                            <BombFarms />
                         </Grid>
-                        <Grid item xs={12} sm={12} justify="center" style={{ margin: '18px', display: 'flex', border: "1px solid grey"}}>
+                        <Grid item xs={12} sm={12} justify="center" style={{ marginTop: '18px', border: "1px solid grey"}}>
                             <h1>Component 5</h1>
                         </Grid>
+
                     </>
                     ) : (
           <UnlockWallet />

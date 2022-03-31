@@ -10,6 +10,7 @@ import useClaimRewardCheck from '../../../hooks/boardroom/useClaimRewardCheck';
 import useEarningsOnBoardroom from '../../../hooks/useEarningsOnBoardroom';
 import useBombFinance from '../../../hooks/useBombFinance';
 import Button from '../../../components/Button';
+import useApprove, {ApprovalState} from '../../../hooks/useApprove';
 import useHarvestFromBoardroom from '../../../hooks/useHarvestFromBoardroom';
 
 const Boardroom: React.FC = () => {
@@ -22,6 +23,7 @@ const Boardroom: React.FC = () => {
     const stakedBalance = useStakedBalanceOnBoardroom();
     const {onReward} = useHarvestFromBoardroom();
     const stakedTokenPriceInDollars = useStakedTokenPriceInDollars('BSHARE', bombFinance.BSHARE);
+    const [approveStatus, approve] = useApprove(bombFinance.BSHARE, bombFinance.contracts.Boardroom.address);
 
     const tokenPriceInDollars = useMemo(
         () =>
@@ -65,7 +67,7 @@ const Boardroom: React.FC = () => {
                 <Typography align="center">{`≈ $${tokenPriceInDollars}`}</Typography>
                 </Grid>
                 <Grid container justify="center"  item xs={4}>
-                        <Button size="sm" width="50" text="Deposit" variant="secondary"/>
+                        <Button size="sm" width="50" disabled={approveStatus !== ApprovalState.NOT_APPROVED} onClick={approve} text="Deposit" variant="secondary"/>
                         <Button size="sm" width="50" text="Withdraw" variant="secondary"/>
                         <Button size="sm" width="50" text="Claim" variant="secondary" disabled={!canClaimReward} onClick={onReward}/>
                 </Grid>
